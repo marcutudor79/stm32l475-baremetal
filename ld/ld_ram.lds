@@ -11,4 +11,6 @@ SECTIONS {
     .bss    : { *(.bss)  }   > sram1
 }
 
-ENTRY(main)
+_stack_start = ORIGIN(sram2) + LENGTH(sram2);
+
+ENTRY(_start)

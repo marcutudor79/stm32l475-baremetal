@@ -3,25 +3,51 @@ PREFIX   = arm-none-eabi
 # compiler
 CC 		 = ${PREFIX}-gcc
 # compile flags
-CFLAGS   = -c -g -O1 -mthumb
+CFLAGS   = -g -O0 -mthumb
 # linker flags
-LDFLAGS  = -nostdlib
+LDFLAGS  = -T ld/ld_ram.lds -nostdlib
 # cpu arch
-CPU_ARCH = cortex-m4
+TARGET_ARCH = -mcpu=cortex-m4
 # GDB
 GDB      = ${PREFIX}-gdb
 
-all:
-	${CC} ${CFLAGS} -mcpu=${CPU_ARCH} main.c -o main.o	
-	${CC} ${LDFLAGS} -T ld_ram.lds 	  main.o -o main.elf
+.PHONY: all clean build debug connect
 
+# sources
+C_SRC   := $(wildcard src/*.c)
+ASM_SRC := $(wildcard src/*.s)
+
+# build folder
+BUILD := build
+
+# put objects into build/
+OBJ := $(patsubst src/%.c,$(BUILD)/%.o,$(C_SRC)) \
+       $(patsubst src/%.s,$(BUILD)/%.o,$(ASM_SRC))
+
+all: $(BUILD) $(BUILD)/main.elf
+
+# creates build folder
+$(BUILD):
+	mkdir -p $(BUILD)
+
+# explicit compile rules (don't rely on implicit rules that may miss src paths)
+$(BUILD)/%.o: src/%.c | $(BUILD)
+	$(CC) $(CFLAGS) $(TARGET_ARCH) -c $< -o $@
+
+$(BUILD)/%.o: src/%.s | $(BUILD)
+	$(CC) $(CFLAGS) $(TARGET_ARCH) -c $< -o $@
+
+# link
+${BUILD}/main.elf: $(OBJ)
+	$(CC) $(TARGET_ARCH) $(LDFLAGS) $(OBJ) -o $@
+
+# remove all build artifacts
 clean:
-	rm -rf *.o
-	rm -rf *.elf
+	rm -rf build
 
 # debug infrastructure
 connect:
 	JLinkGDBServer -device STM32L475VG -endian little -if SWD -speed auto -ir -LocalhosstOnly
 
 debug:
-	${GDB} -x stm32-4se.gdb 
+	${GDB} -x debug/stm32-4se.gdb
