@@ -3,7 +3,7 @@ PREFIX   = arm-none-eabi
 # compiler
 CC 		 = ${PREFIX}-gcc
 # compile flags
-CFLAGS   = -g -O0 -mthumb
+CFLAGS   = -g -O0 -mthumb -ffreestanding
 # linker flags
 LDFLAGS  = -T ld/ld_ram.lds -nostdlib
 # cpu arch
