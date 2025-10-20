@@ -1,3 +1,4 @@
+/* Memory map for STM32L475 */
 MEMORY {
     flash : ORIGIN = 0x08000000, LENGTH = 1M
     sram1 : ORIGIN = 0x20000000, LENGTH = 96K
@@ -8,7 +9,11 @@ SECTIONS {
     .text   : { *(.text) }   > sram1
     .data   : { *(.data) }   > sram1
     .rodata : { *(.rodata) } > sram1
-    .bss    : { *(.bss)  }   > sram1
+    .bss    : {
+        _bss_start = .; /* Mark start and end for bss - init purposes */
+        *(.bss)
+        _bss_end = .;
+    }   > sram1
 }
 
 _stack_start = ORIGIN(sram2) + LENGTH(sram2);

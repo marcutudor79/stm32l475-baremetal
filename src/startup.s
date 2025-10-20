@@ -11,5 +11,9 @@ _start:
     # init the stack
     ldr sp, =_stack_start
 
+    # go and init bss
+    bl init_bss
+
     # branch to main C program
-    bl main
+    b main
+    
