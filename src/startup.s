@@ -15,5 +15,8 @@ _start:
     bl init_bss
 
     # branch to main C program
-    b main
-    
+    bl main
+
+# prevent execution of other parts of code if main exits (should never get here)
+_exit:
+    b _exit
