@@ -1,3 +1,5 @@
+#include "led.h"
+
 int n = 0U;
 
 // recursive fibo_recursivennaci - not good in embedded apps due to being susceptible to stack overflow
@@ -29,14 +31,37 @@ int fibo_linear(int n)
     return b;
 }
 
+/* Function to delay */
+void delay()
+{
+        for (int i=0U; i<500U; i++)
+            // asm - inline assembly volatile - do not optimize the nops in the executable
+            __asm__ volatile("nop");
+}
+
 int main(void)
 {
+    /* Checkout fibonacci calculus */
     if (fibo_recursive(3) != fibo_linear(3))
     {
-        // error occured
         while(1);
     }
 
-    // worked fine
+    /* Init the green LED */
+    led_g_init();
+
+    /* Start LED blinking */
+    while(1)
+    {
+        led_g_on();
+
+        delay();
+
+        led_g_off();
+
+        delay();
+    }
+
+    /* Should not get here */
     while(1);
 }
