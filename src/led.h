@@ -10,4 +10,10 @@ void led_g_on();
 /* Function to turn off LED2 (green) */
 void led_g_off();
 
+/* Function to turn on LED (yellow) and off LED (blue) */
+void led_y_on_b_off(void);
+
+/* Function to turn off LED (yellow) and on LED (blue) */
+void led_y_off_b_on(void);
+
 #endif /* LED_H */

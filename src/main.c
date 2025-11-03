@@ -34,7 +34,7 @@ int fibo_linear(int n)
 /* Function to delay */
 void delay()
 {
-        for (int i=0U; i<500U; i++)
+        for (int i=0U; i<50000U; i++)
             // asm - inline assembly volatile - do not optimize the nops in the executable
             __asm__ volatile("nop");
 }
@@ -54,11 +54,11 @@ int main(void)
     while(1)
     {
         led_g_on();
-
+        led_y_on_b_off();
         delay();
 
         led_g_off();
-
+        led_y_off_b_on();
         delay();
     }
 
