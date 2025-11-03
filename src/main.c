@@ -1,5 +1,5 @@
-#include "led.h"
-#include "clocks.h"
+#include "inc/led.h"
+#include "inc/clocks.h"
 
 int n = 0U;
 
