@@ -3,9 +3,9 @@ PREFIX   = arm-none-eabi
 # compiler
 CC 		 = ${PREFIX}-gcc
 # compile flags
-CFLAGS   = -g -O0 -mthumb -ffreestanding
+CFLAGS   = -g -O0 -mthumb -ffreestanding -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 # linker flags
-LDFLAGS  = -T ld/ld_ram.lds -nostdlib
+LDFLAGS  = -T ld/ld_ram.lds -nostdlib -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 # cpu arch
 TARGET_ARCH = -mcpu=cortex-m4
 # GDB
@@ -22,7 +22,8 @@ BUILD := build
 
 # put objects into build/
 OBJ := $(patsubst src/%.c,$(BUILD)/%.o,$(C_SRC)) \
-       $(patsubst src/%.s,$(BUILD)/%.o,$(ASM_SRC))
+       $(patsubst src/%.s,$(BUILD)/%.o,$(ASM_SRC)) \
+	   $(wildcard lib/*.o)
 
 all: $(BUILD) $(BUILD)/main.elf
 

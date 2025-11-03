@@ -1,4 +1,5 @@
 #include "led.h"
+#include "clocks.h"
 
 int n = 0U;
 
@@ -34,13 +35,16 @@ int fibo_linear(int n)
 /* Function to delay */
 void delay()
 {
-        for (int i=0U; i<50000U; i++)
+        for (int i=0U; i<500000U; i++)
             // asm - inline assembly volatile - do not optimize the nops in the executable
             __asm__ volatile("nop");
 }
 
 int main(void)
 {
+    /* Enables the 80Mhz clock */
+    clocks_init();
+
     /* Checkout fibonacci calculus */
     if (fibo_recursive(3) != fibo_linear(3))
     {
