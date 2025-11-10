@@ -1,7 +1,7 @@
 #include "inc/led.h"
 #include "inc/clocks.h"
 #include "inc/uart.h"
-#include "stdlib.h"
+#include "inc/irq.h"
 
 /* Defines */
 #define TWO_POWER_32 4294967296
@@ -56,17 +56,8 @@ char *itoa(int value, char *str, int base)
     return str - ((base == 10 && value < 0) ? 1 : 0);
 }
 
-int main(void)
+void test_uart()
 {
-    /* Enables the 80Mhz clock */
-    clocks_init();
-
-    /* Init the green LED */
-    led_g_init();
-
-    /* Init UART */
-    uart_init();
-
     uint8_t buff = 0;
     uint32_t sum = 0;
     char itoa_buf[11];
@@ -89,6 +80,35 @@ int main(void)
         uart_puts("\n\r");
         delay();
     }
+}
+
+void test_led()
+{
+    /* Start LED blinking */
+    while(1)
+    {
+        led_g_on();
+        delay();
+        led_g_off();
+        delay();
+    }
+}
+
+int main(void)
+{
+    /* Enables the 80Mhz clock */
+    clocks_init();
+
+    /* Init the green LED */
+    led_g_init();
+
+    /* Init UART */
+    uart_init();
+
+    /* Init IRQs */
+    irq_init();
+
+    test_led();
 
     /* Should not get here */
     while(1);
