@@ -6,7 +6,9 @@ This is an assembly + C project in which a baremetal project without any SDK is 
 ✅ INTRO
 ✅ LDSCRIPT
 ✅ GPIO
-⏳ UART
+✅ UART
+⏳ MATRIX
+⏳ IRQ
 
 # How to build the project
 
