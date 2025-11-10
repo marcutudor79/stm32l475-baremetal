@@ -3,6 +3,7 @@
  *************************************************************/
 #include <stdint.h>
 #include "inc/irq.h"
+#include "inc/led.h"
 
 /*************************************************************
  *                      SYMBOLS FROM LINKER                   *
@@ -69,7 +70,7 @@ void SPI2_IRQHandler(void)             __attribute__ ((weak, alias("Default_Hand
 void USART1_IRQHandler(void)           __attribute__ ((weak, alias("Default_Handler")));
 void USART2_IRQHandler(void)           __attribute__ ((weak, alias("Default_Handler")));
 void USART3_IRQHandler(void)           __attribute__ ((weak, alias("Default_Handler")));
-void EXTI15_10_IRQHandler(void)        __attribute__ ((weak, alias("Default_Handler")));
+void EXTI15_10_IRQHandler(void);
 void RTC_Alarm_IRQHandler(void)        __attribute__ ((weak, alias("Default_Handler")));
 /* Add more peripheral handlers here as required by your device... */
 
@@ -79,6 +80,23 @@ void RTC_Alarm_IRQHandler(void)        __attribute__ ((weak, alias("Default_Hand
 void Default_Handler(void)
 {
     while (1) { __asm__ volatile ("wfi"); }
+}
+
+/* Handler spécifique qui prime sur le handler par défaut (override weak) */
+void EXTI15_10_IRQHandler(void)
+{
+    /* Vérifier la ligne 13 pending */
+    if (EXTI->PR1 & EXTI_PR1_PIF13)
+    {
+        /* Acquitter l'interruption en écrivant 1 sur PR1 bit 13 */
+        EXTI->PR1 = EXTI_PR1_PIF13;
+
+        /* Toggle LED verte (PB14) : utilise les fonctions led ou bascule directement */
+        if (GPIOB->ODR & (1U << 14))
+            led_g_off();
+        else
+            led_g_on();
+    }
 }
 
 /*************************************************************

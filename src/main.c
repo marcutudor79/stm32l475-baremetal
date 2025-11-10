@@ -2,6 +2,7 @@
 #include "inc/clocks.h"
 #include "inc/uart.h"
 #include "inc/irq.h"
+#include "inc/buttons.h"
 
 /* Defines */
 #define TWO_POWER_32 4294967296
@@ -87,9 +88,9 @@ void test_led()
     /* Start LED blinking */
     while(1)
     {
-        led_g_on();
+        led_y_on_b_off();
         delay();
-        led_g_off();
+        led_y_off_b_on();
         delay();
     }
 }
@@ -108,6 +109,10 @@ int main(void)
     /* Init IRQs */
     irq_init();
 
+    /* Init button B2 (PC13) */
+    buttons_init();
+
+    /* Test LEDs */
     test_led();
 
     /* Should not get here */

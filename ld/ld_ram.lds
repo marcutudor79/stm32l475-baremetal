@@ -6,14 +6,15 @@ MEMORY {
 }
 
 SECTIONS {
-    .text   : { *(.text) }   > sram1
-    .data   : { *(.data) }   > sram1
-    .rodata : { *(.rodata) } > sram1
-    .bss    : {
+    .text                  : { *(.text) }   > sram1
+    .data                  : { *(.data) }   > sram1
+    .rodata                : { *(.rodata) } > sram1
+    .bss                   : {
         _bss_start = .; /* Mark start and end for bss - init purposes */
         *(.bss)
         _bss_end = .;
     }   > sram1
+    .isr_vector ALIGN(256) : { *(.isr_vector) } > sram1
 }
 
 _stack_start = ORIGIN(sram2) + LENGTH(sram2);
