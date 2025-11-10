@@ -1,35 +1,37 @@
 #include "inc/led.h"
 #include "inc/clocks.h"
+#include "inc/uart.h"
 
-int n = 0U;
+/* Function to delay */
+void delay();
 
-// recursive fibo_recursivennaci - not good in embedded apps due to being susceptible to stack overflow
-int fibo_recursive(int n)
+int main(void)
 {
-    if (n <= 1U)
-        return n;
+    /* Enables the 80Mhz clock */
+    clocks_init();
 
-    return (fibo_recursive(n-1) + fibo_recursive(n-2));
-}
+    /* Init the green LED */
+    led_g_init();
 
-int fibo_linear(int n)
-{
-    int a = 0U;
-    int b = 1U;
+    /* Init UART */
+    uart_init();
 
-    if (n <= 0)
-        return 0;
-    if (n == 1)
-        return 1;
-
-    for (int i = 2; i <= n; ++i)
+    /* Start LED blinking */
+    while(1)
     {
-        int c = a + b;
-        a = b;
-        b = c;
+        uart_send_string("Toggle LEDs ON...\r\n");
+        led_g_on();
+        led_y_on_b_off();
+        delay();
+
+        uart_send_string("Toggle LEDs OFF...\r\n");
+        led_g_off();
+        led_y_off_b_on();
+        delay();
     }
 
-    return b;
+    /* Should not get here */
+    while(1);
 }
 
 /* Function to delay */
@@ -38,34 +40,4 @@ void delay()
         for (int i=0U; i<500000U; i++)
             // asm - inline assembly volatile - do not optimize the nops in the executable
             __asm__ volatile("nop");
-}
-
-int main(void)
-{
-    /* Enables the 80Mhz clock */
-    clocks_init();
-
-    /* Checkout fibonacci calculus */
-    if (fibo_recursive(3) != fibo_linear(3))
-    {
-        while(1);
-    }
-
-    /* Init the green LED */
-    led_g_init();
-
-    /* Start LED blinking */
-    while(1)
-    {
-        led_g_on();
-        led_y_on_b_off();
-        delay();
-
-        led_g_off();
-        led_y_off_b_on();
-        delay();
-    }
-
-    /* Should not get here */
-    while(1);
 }

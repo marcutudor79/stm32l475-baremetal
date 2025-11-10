@@ -3,13 +3,15 @@ PREFIX   = arm-none-eabi
 # compiler
 CC 		 = ${PREFIX}-gcc
 # compile flags
-CFLAGS   = -g -O0 -mthumb -ffreestanding -mfpu=fpv4-sp-d16 -mfloat-abi=hard
+CFLAGS   = -g -O0 -mthumb -ffreestanding -mfpu=fpv4-sp-d16 -mfloat-abi=hard -D$(TARGET_BOARD)
 # linker flags
 LDFLAGS  = -T ld/ld_ram.lds -nostdlib -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 # cpu arch
 TARGET_ARCH = -mcpu=cortex-m4
 # GDB
 GDB      = ${PREFIX}-gdb
+# CMSIS target board
+TARGET_BOARD = STM32L475xx
 
 .PHONY: all clean build debug connect
 
