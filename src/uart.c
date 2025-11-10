@@ -42,19 +42,45 @@ void uart_init(void)
     USART1->CR1 |= USART_CR1_UE;
 }
 
-void uart_send_char(char c)
+void uart_putchar(uint8_t c)
 {
     /* Wait until transmit data register is empty */
     while (!(USART1->ISR & USART_ISR_TXE));
 
     /* Send the character */
-    USART1->TDR = (uint8_t)c;
+    USART1->TDR = c;
 }
 
-void uart_send_string(const char *str)
+void uart_puts(const char *str)
 {
     while (*str)
     {
-        uart_send_char(*str++);
+        uart_putchar(*str++);
     }
+}
+
+void uart_getchar(uint8_t *c)
+{
+    /* Wait until receive data register is not empty */
+    while (!(USART1->ISR & USART_ISR_RXNE));
+
+    /* Read the character */
+    *c = (char)(USART1->RDR & 0xFF);
+}
+
+void uart_gets(char *buf, size_t len)
+{
+    size_t i = 0;
+    uint8_t c;
+
+    while (i < (len - 1)) // Leave space for null terminator
+    {
+        uart_getchar(&c);
+        if (c == '\r' || c == '\n') // Newline or carriage return
+        {
+            break;
+        }
+        buf[i++] = (char)c;
+    }
+    buf[i] = '\0'; // Null-terminate the string
 }

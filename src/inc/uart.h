@@ -6,6 +6,7 @@
  *************************************************************/
 
 #include "stm32l4xx.h"
+#include <stddef.h>
 
 /*************************************************************
  *                      GLOBAL FUNCTIONS                     *
@@ -15,10 +16,16 @@
 void uart_init();
 
 /* Function used to send a char through */
-void uart_send_char(char c);
+void uart_putchar(uint8_t c);
+
+/* Function to receive a char */
+void uart_getchar(uint8_t *c);
 
 /* Function used to send a string through */
-void uart_send_string(const char *str);
+void uart_puts(const char *str);
+
+/* Function to receive a string */
+void uart_gets(char *buf, size_t len);
 
 
 #endif // UART_H

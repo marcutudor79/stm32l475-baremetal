@@ -16,15 +16,23 @@ int main(void)
     /* Init UART */
     uart_init();
 
+    char name[50];
+
     /* Start LED blinking */
     while(1)
     {
-        uart_send_string("Toggle LEDs ON...\r\n");
+        uart_puts("What is your name?\r\n");
+        uart_gets(name, 50);
+        uart_puts("Hello, ");
+        uart_puts(name);
+        uart_puts("!\r\n");
+
+        uart_puts("Toggle LEDs ON...\r\n");
         led_g_on();
         led_y_on_b_off();
         delay();
 
-        uart_send_string("Toggle LEDs OFF...\r\n");
+        uart_puts("Toggle LEDs OFF...\r\n");
         led_g_off();
         led_y_off_b_on();
         delay();
